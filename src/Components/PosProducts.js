@@ -1,43 +1,55 @@
 import axios from "axios";
 import React from "react";
+import {Button,ListGroup,Badge,Card} from 'react-bootstrap';
 
 
 
 export default class PosProducts extends React.Component {
-
-
+    
     state = {
         productsList: [],
         controller: 0,
-        subtotal: isNaN(parseFloat(localStorage.getItem('subtotal')))  ? (0) : (parseFloat(localStorage.getItem('subtotal'))),
+        //total price of products
+        subtotal: 0,
         //products in cart
+        buttonVariant: 'primary',
+
         cakePop: {
-            count:  isNaN(parseInt(localStorage.getItem('cakepop-count')))  ? (0) : (parseInt(localStorage.getItem('cakepop-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('cakepop-price')))  ? (0) : (parseFloat(localStorage.getItem('cakepop-price')))},
+            count:  0,
+            price:  0,
+        },
         appleTart: {
-            count:  isNaN(parseInt(localStorage.getItem('appleTart-count')))  ? (0) : (parseInt(localStorage.getItem('appleTart-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('appleTart-price')))  ? (0) : (parseFloat(localStorage.getItem('appleTart-price')))},
+            count:  0,
+            price:  0,
+        },
         muffin: {
-            count:  isNaN(parseInt(localStorage.getItem('muffin-count')))  ? (0) : (parseInt(localStorage.getItem('muffin-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('muffin-price')))  ? (0) : (parseFloat(localStorage.getItem('muffin-price')))},
+            count:  0,
+            price:  0,
+        },
         brownie: {
-            count:  isNaN(parseInt(localStorage.getItem('brownie-count')))  ? (0) : (parseInt(localStorage.getItem('brownie-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('brownie-price')))  ? (0) : (parseFloat(localStorage.getItem('brownie-price')))},
+            count:  0,
+            price:  0,
+        },
         water: {
-            count:  isNaN(parseInt(localStorage.getItem('water-count')))  ? (0) : (parseInt(localStorage.getItem('water-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('water-price')))  ? (0) : (parseFloat(localStorage.getItem('water-price')))},
+            count:  0,
+            price:  0,
+        },
         pants: {
-            count:  isNaN(parseInt(localStorage.getItem('pants-count')))  ? (0) : (parseInt(localStorage.getItem('pants-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('pants-price')))  ? (0) : (parseFloat(localStorage.getItem('pants-price')))},
+            count:  0,
+            price:  0,
+        },
         toy: {
-            count:  isNaN(parseInt(localStorage.getItem('toy-count')))  ? (0) : (parseInt(localStorage.getItem('toy-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('toy-price')))  ? (0) : (parseFloat(localStorage.getItem('toy-price')))},
+            count:  0,
+            price:  0,
+        },
         shirt: {
-            count:  isNaN(parseInt(localStorage.getItem('shirt-count')))  ? (0) : (parseInt(localStorage.getItem('shirt-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('shirt-price')))  ? (0) : (parseFloat(localStorage.getItem('shirt-price')))},
+            count:  0,
+            price:  0,
+        },
         jacket: {
-            count:  isNaN(parseInt(localStorage.getItem('jacket-count')))  ? (0) : (parseInt(localStorage.getItem('jacket-count'))),
-            price:  isNaN(parseFloat(localStorage.getItem('jacket-price')))  ? (0) : (parseFloat(localStorage.getItem('jacket-price')))}, 
+            count:  0,
+            price:  0, 
+        }
     };
 
     
@@ -202,26 +214,151 @@ export default class PosProducts extends React.Component {
     render() {
         return(
             <div>
-            <ul>
+            <h3>List of products available</h3>
+            <p>Click on product name to add to cart</p>
+
+                
+       
+            
+            <ListGroup >
             {this.state.productsList.map(product =>
-            <li key={product.name}><button onClick={() => this.productAdd(product.name)}>{product.name} </button></li>)}
-            </ul>
-            <h1>Shopping Cart</h1>
+             <ListGroup.Item key={product.name}><Button variant={this.state.buttonVariant} onClick={() => this.productAdd(product.name)}>{product.name}</Button> </ListGroup.Item> )}</ListGroup>
+          
+            <h3>Products in shopping cart</h3>
             
             {/* If there is none in cart do nothing ? if there is show count and row total price */}
 
-            {this.state.cakePop.count === 0 ? (''):(this.state.cakePop.count + ' Cake Pop '+ this.state.cakePop.price)}
-            {this.state.appleTart.count === 0 ? (''):(this.state.appleTart.count + ' Apple Tart '+ this.state.appleTart.price)}
-            {this.state.muffin.count === 0 ? (''):(this.state.muffin.count + ' Muffin '+ this.state.muffin.price)}
-            {this.state.brownie.count === 0 ? (''):(this.state.brownie.count + ' Brownie '+ this.state.brownie.price)}
-            {this.state.water.count === 0 ? (''):(this.state.water.count + ' Water '+ this.state.water.price)}
-            {this.state.pants.count === 0 ? (''):(this.state.pants.count + ' Pants '+ this.state.pants.price)}
-            {this.state.toy.count === 0 ? (''):(this.state.toy.count + ' Toy '+ this.state.toy.price)}
-            {this.state.shirt.count === 0 ? (''):(this.state.shirt.count + ' Shirt '+ this.state.shirt.price)}
-            {this.state.jacket.count === 0 ? (''):(this.state.jacket.count + ' Jacket '+ this.state.jacket.price)}
 
-            <p>Subtotal:{this.state.subtotal}</p>
 
+            <Card body>
+            <ListGroup as="ol" numbered >
+                    
+                
+
+                    {this.state.cakePop.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Cake Pop ............ 1.35</div>
+                            Items in cart: {this.state.cakePop.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.cakePop.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.appleTart.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Apple Tart ............ 1.50</div>
+                            Items in cart: {this.state.appleTart.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.appleTart.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.muffin.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Muffin ............ 1.00</div>
+                            Items in cart: {this.state.muffin.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.muffin.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.brownie.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Brownie ............ 0.65</div>
+                            Items in cart: {this.state.brownie.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.brownie.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.water.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Water ............ 1.50</div>
+                            Items in cart: {this.state.water.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.water.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.pants.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Pants ............ 3.00</div>
+                            Items in cart: {this.state.pants.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.pants.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.toy.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Toy ............ 1.00</div>
+                            Items in cart: {this.state.toy.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.toy.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.shirt.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Shirt ............ 2.00</div>
+                            Items in cart: {this.state.shirt.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.shirt.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                    {this.state.jacket.count === 0 ? ('') : (<ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start"
+                    >
+                        <div className="ms-2 me-auto">
+                            <div className="fw-bold">Jacket ............ 4.00</div>
+                            Items in cart: {this.state.jacket.count}
+                        </div>
+                        <Badge variant="primary" pill>
+                           Total: {this.state.jacket.price.toFixed(2)}
+                        </Badge>
+                    </ListGroup.Item>)}
+
+                
+            </ListGroup>
+            <Card.Footer className="text-muted"><h4 className="float-end">Subtotal:{this.state.subtotal.toFixed(2)}</h4></Card.Footer>
+            
+            </Card>
+            
+            
             </div>
 
 )

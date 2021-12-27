@@ -1,10 +1,15 @@
 import axios from "axios";
-import React from "react";
+//import React from "react";
+import React, { useState } from 'react';
+import {Button, Modal, Form} from 'react-bootstrap';
 
 
 
 export default class NullQtyProducts extends React.Component {
     state = {
+
+        modalShow: localStorage.getItem('show') === null ? (true) : (false),
+
         productsList: [],
         noQtyProducts: [],
 
@@ -75,25 +80,20 @@ export default class NullQtyProducts extends React.Component {
              .then(res => {
                  console.log(res);
                  console.log(res.data);
-                 console.log('tere');
              });
              axios.put("https://localhost:5001/products/8",productsPants )
              .then(res => {
                  console.log(res);
-                 console.log(res.data);
-                 console.log('tere');
-             });
+                 console.log(res.data);             });
              axios.put("https://localhost:5001/products/9",productsJacket )
              .then(res => {
                  console.log(res);
                  console.log(res.data);
-                 console.log('tere');
              });
              axios.put("https://localhost:5001/products/10",productsToy )
              .then(res => {
                  console.log(res);
                  console.log(res.data);
-                 console.log('tere');
              });
     };
     componentDidMount() {
@@ -104,25 +104,44 @@ export default class NullQtyProducts extends React.Component {
         });
     };
 
+    handleModal() {
+
+        
+        this.setState({modalShow:false})
+        localStorage.setItem('show', false)
+    }
+
     render() {
         return(
             
-            <ul>
+            <div>
+                <Modal show={this.state.modalShow}>
+                    <Modal.Header>Welcome!</Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleSubmitShirt}>
+                            <p>Insert quantities of these products to start the day!</p>
+                            <Form.Group className="w-50" controlId="formGroupShirt">
+                                <Form.Label>Shirt quantity:</Form.Label>
+                                <Form.Control type="number" placeholder="Shirt quantity" onChange={this.qtyChangeShirt} />
+                            </Form.Group>
+                            <Form.Group className="w-50" controlId="formGroupPants">
+                                <Form.Label>Pants quantity:</Form.Label>
+                                <Form.Control type="number" placeholder="Pants quantity" onChange={this.qtyChangePants} />
+                            </Form.Group>
+                            <Form.Group className="w-50" controlId="formGroupJacket">
+                                <Form.Label>Jacket quantity:</Form.Label>
+                                <Form.Control type="number" placeholder="Jacket quantity" onChange={this.qtyChangeJacket} />
+                            </Form.Group>
+                            <Form.Group className="w-50" controlId="formGroupToy">
+                                <Form.Label>Toy quantity:</Form.Label>
+                                <Form.Control type="number" placeholder="Toy quantity" onChange={this.qtyChangeToy} />
+                            </Form.Group>
+                            <Button onClick={() => { this.handleModal() }} type="submit">Add</Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
             
-                {/*kuva ainult ilma koguseta elemendid
-                
-                {this.state.productsList.filter(productsList => productsList.quantity < 1).map(product =>
-                <li key={product.name}>{product.name} {product.quantity}</li>)} */} 
-
-                <form onSubmit={this.handleSubmitShirt}>
-                <p>Insert quantities of these products to start the day!</p>
-                <li>Shirt: <input type="text" key="shirt" name="shirt" onChange={this.qtyChangeShirt}/></li>
-                <li>Pants: <input type="text" key="pants" name="pants" onChange={this.qtyChangePants}/></li>
-                <li>Jacket: <input type="text" key="jacket" name="jacket" onChange={this.qtyChangeJacket}/></li>
-                <li>Toy: <input type="text" key="toy" name="toy" onChange={this.qtyChangeToy}/> </li>
-                <button type="submit">Add</button>
-                </form>  
-            </ul>
         )
     }
 }
