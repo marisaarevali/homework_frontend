@@ -1,9 +1,16 @@
-import React from "react";
+//import React from "react";
 import axios from "axios";
+import {Button, Modal, Form} from 'react-bootstrap';
+import PosProducts from "./PosProducts";
+import React, { useState } from 'react';
 
 
 export default class Checkout extends React.Component {
     state = {
+        //show checkout modal
+        showProceedToCheckOut: false,
+        //show payment modal
+        showPaymentOk: false,
         productsList: [],
         namesList: [],
         //check if there is input
@@ -13,7 +20,7 @@ export default class Checkout extends React.Component {
         //change to give back to client
         change:0,
         //subtotal price of items in cart
-        subtotal: isNaN(parseFloat(localStorage.getItem('subtotal')))  ? (0) : (parseFloat(localStorage.getItem('subtotal'))),
+        subtotal: Number(localStorage.getItem('subtotal')),
         
 
 
@@ -78,7 +85,6 @@ export default class Checkout extends React.Component {
 
     componentDidMount() {
         axios.get('https://localhost:5001/products').then(res => {
-            // console.log(res);
             this.setState({ productsList: res.data });
 
             this.state.productsList.filter(productsList => productsList.id === 2).map( (product) => {
@@ -178,15 +184,12 @@ export default class Checkout extends React.Component {
                 return(console.log(this.state.toy))
             })
         });
+        console.log(this.state.subtotal)
     };
 
 
 
-    inputMoney = event => {
-        this.setState({money : event.target.value })
-        this.setState({inputController: 1})
-        
-    }
+    
     	
     changeQty() {
         this.setState({
@@ -203,7 +206,7 @@ export default class Checkout extends React.Component {
             }
         })}
 
-     productSold() {
+    checkOutHandler() {
 
         this.setState(prevState => ({
             brownie: {                   // object that we want to update
@@ -262,6 +265,50 @@ export default class Checkout extends React.Component {
         }))
 
         
+        
+        
+    }
+    
+
+    
+    //money given back to customer
+    handleChange = event => {
+
+        event.preventDefault();
+        //close checkout modal
+        this.setState({showProceedToCheckOut:false});
+        //open change modal
+        this.setState({showPaymentOk:true});
+        //calculate money given back
+        this.setState({change: this.state.money - this.state.subtotal})
+        
+        this.changeQty();
+        this.checkOutHandler();
+        
+        localStorage.setItem('show', false)
+        }
+
+    handleModal(){
+        this.setState({showProceedToCheckOut:true})
+        this.checkOutHandler();
+        
+
+    }
+
+    inputMoney = event => {
+        this.setState({money : event.target.value })
+        this.setState({inputController: 1})
+        
+    }
+
+
+    handlePut = event => {
+
+        //event.preventDefault();
+       
+
+
+
         axios.put("https://localhost:5001/products/2", this.state.brownie )
              .then(res => {
                  //console.log(res);
@@ -314,36 +361,48 @@ export default class Checkout extends React.Component {
             //console.log(res);
             //console.log(res.data);
         });
-        
-    }
-    
 
-    
-
-    handleChange = event => {
-        event.preventDefault();
-
-        if (this.state.subtotal <= this.state.money) {
-            this.setState({change: this.state.money - this.state.subtotal})
-        }
-        this.changeQty();
-        this.productSold()
+        this.setState({showPaymentOk:false})
         localStorage.clear();
-        }
+        localStorage.setItem('show',false)
+
+    }
 
 
     
     render() {
         return(
             <div>
-            <p>Insert received cash and push checkout:</p>
-            <form onSubmit={this.handleChange}>
-            <input type="number" key="cash" onChange={this.inputMoney}/>
-            <button type="submit">Checkout</button>
-            </form>
-            <p>Money given: {this.state.money}</p>
+            <Button onClick={() => { this.handleModal() }} type="submit">Proceed to checkout</Button>
+             
+             
+             <Modal show={this.state.showProceedToCheckOut}>
+                    <Modal.Header>Payment</Modal.Header>
+                    <Modal.Body>
+                    Subtotal:{this.state.subtotal.toFixed(2)}
+                        <Form onSubmit={this.handleChange}>                            
+                            <Form.Group className="w-50" controlId="formGroupShirt">
+                                <Form.Label>Insert money received:</Form.Label>
+                                <Form.Control type="number" onChange={this.inputMoney} />
+                            </Form.Group>
+                            <Button onClick={this.handleChange} type="submit">Pay</Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
 
-            <p>Change: {this.state.change}</p>         
+
+                <Modal show={this.state.showPaymentOk}>
+                    <Modal.Header>Change: {this.state.change.toFixed(2)}</Modal.Header>
+                    <Modal.Body>
+                            <Button onClick={this.handlePut} type="submit">Back</Button>
+                    </Modal.Body>
+                </Modal>
+
+
+           
+
+
+     
 
             {/* {this.state.subtotal > this.state.money && this.state.inputController > 0 ? ('Need an extra'):('')} */}
           
